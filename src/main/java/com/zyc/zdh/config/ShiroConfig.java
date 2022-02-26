@@ -13,6 +13,7 @@ import java.util.Map;
 
 import javax.servlet.Filter;
 
+import com.zyc.zdh.shiro.*;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.codec.Base64;
 import org.apache.shiro.session.SessionListener;
@@ -33,21 +34,14 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.filter.DelegatingFilterProxy;
 
-import com.zyc.zdh.shiro.MyFormAuthenticationFilter;
-import com.zyc.zdh.shiro.MyRealm;
-import com.zyc.zdh.shiro.MyShiroSessionListener;
-import com.zyc.zdh.shiro.RedisUtil;
-import com.zyc.zdh.shiro.SessionDao;
-import com.zyc.zdh.shiro.ShiroRedisCacheManager;
-
 @Configuration
 public class ShiroConfig {
 
 
-	
+
 	@Bean(name="shiroRedisCacheManager")
-	public ShiroRedisCacheManager shiroRedisCacheManager(RedisTemplate redisTemplate){
-		ShiroRedisCacheManager shiroRedisCacheManager=new ShiroRedisCacheManager();
+	public ShiroRedisCacheManager shiroRedisCacheManager(RedisTemplate<String, Object> redisTemplate){
+		ShiroRedisCacheManager shiroRedisCacheManager = new ShiroRedisCacheManager();
 		shiroRedisCacheManager.setRedisTemplate(redisTemplate);
 		return shiroRedisCacheManager;
 	}
@@ -55,10 +49,9 @@ public class ShiroConfig {
 
 	@Bean(name = "lifecycleBeanPostProcessor")
 	public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
-		LifecycleBeanPostProcessor lifecycleBeanPostProcessor = new LifecycleBeanPostProcessor();
-		return lifecycleBeanPostProcessor;
+		return new LifecycleBeanPostProcessor();
 	}
-	
+
 	@Bean(name = "sessionValidationScheduler")
 	public ExecutorServiceSessionValidationScheduler getExecutorServiceSessionValidationScheduler(DefaultWebSessionManager defaultWebSessionManager) {
 		ExecutorServiceSessionValidationScheduler scheduler = new ExecutorServiceSessionValidationScheduler();
@@ -66,7 +59,7 @@ public class ShiroConfig {
 		scheduler.setSessionManager(defaultWebSessionManager);
 		return scheduler;
 	}
-	
+
 	@Bean
 	public HashedCredentialsMatcher hashedCredentialsMatcher() {
 		HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
@@ -75,18 +68,22 @@ public class ShiroConfig {
 		hashedCredentialsMatcher.setStoredCredentialsHexEncoded(true);
 		return hashedCredentialsMatcher;
 	}
-	
+
+	// 创建安全管理器
 	@Bean(name = "defaultWebSecurityManager")
-	public DefaultWebSecurityManager defaultWebSecurityManager(MyRealm myRealm,DefaultWebSessionManager defaultWebSessionManager,ShiroRedisCacheManager shiroRedisCacheManager) {
+	public DefaultWebSecurityManager defaultWebSecurityManager(MyRealm myRealm, DefaultWebSessionManager defaultWebSessionManager, ShiroRedisCacheManager shiroRedisCacheManager) {
 		DefaultWebSecurityManager defaultWebSecurityManager = new DefaultWebSecurityManager();
+		// 设置授权域
 		defaultWebSecurityManager.setRealm(myRealm);
-		//defaultWebSecurityManager.setCacheManager(getEhCacheManager());
+		// 缓存管理，这里使用redis进行缓存管理
 		defaultWebSecurityManager.setCacheManager(shiroRedisCacheManager);
+		// 会话管理(default)
 		defaultWebSecurityManager.setSessionManager(defaultWebSessionManager);
+		// cookie管理
 		defaultWebSecurityManager.setRememberMeManager(rememberMeManager());
 		return defaultWebSecurityManager;
 	}
-	
+
 	@Bean(name = "rememberMeCookie")
 	public SimpleCookie rememberMeCookie() {
 		// 这个参数是cookie的名称，对应前端的checkbox的name = rememberMe
@@ -96,21 +93,22 @@ public class ShiroConfig {
 		simpleCookie.setName("rememberMe");
 		return simpleCookie;
 	}
-	
+
 	/**
 	 * cookie管理对象;
-	 * 
+	 *
 	 * @return
 	 */
 	@Bean(name = "rememberMeManager")
 	public CookieRememberMeManager rememberMeManager() {
 		CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
 		cookieRememberMeManager.setCookie(rememberMeCookie());
+		// cookie 管理使用的秘钥
 		 byte[] cipherKey = Base64.decode("wGiHplamyXlVB11UXWol8g==");
 		cookieRememberMeManager.setCipherKey(cipherKey);
 		return cookieRememberMeManager;
 	}
-	
+
 
 	@Bean
 	@DependsOn(value = "lifecycleBeanPostProcessor")
@@ -124,8 +122,8 @@ public class ShiroConfig {
 		//启用认证信息缓存
 		myRealm.setAuthenticationCachingEnabled(true);
 		myRealm.setAuthenticationCacheName("shiro-AuthenticationCache");
+		// 缓存管理
 		myRealm.setCacheManager(shiroRedisCacheManager);
-		//myRealm.setCredentialsMatcher(hashedCredentialsMatcher());
 		return myRealm;
 	}
 
@@ -136,14 +134,14 @@ public class ShiroConfig {
 		creator.setProxyTargetClass(true);
 		return creator;
 	}
-	
+
 	@Bean
 	public AuthorizationAttributeSourceAdvisor getAuthorizationAttributeSourceAdvisor(DefaultWebSecurityManager defaultWebSecurityManager) {
-		AuthorizationAttributeSourceAdvisor aasa = new AuthorizationAttributeSourceAdvisor();
-		aasa.setSecurityManager(defaultWebSecurityManager);
-		return aasa;
+		AuthorizationAttributeSourceAdvisor assay = new AuthorizationAttributeSourceAdvisor();
+		assay.setSecurityManager(defaultWebSecurityManager);
+		return assay;
 	}
-	
+
 
 	@Bean(name = "sessionManager")
 	public DefaultWebSessionManager defaultWebSessionManager(SessionDao sessionDao) {
@@ -162,42 +160,35 @@ public class ShiroConfig {
 		sessionManager.getSessionIdCookie().setName("WEBJSESSIONID");
 		sessionManager.getSessionIdCookie().setPath("/");
 		sessionManager.getSessionIdCookie().setMaxAge(60*60*24*7);
-		
+
 		sessionManager.setSessionDAO(sessionDao);
 		Collection<SessionListener> c=new ArrayList<>();
 		c.add(new MyShiroSessionListener());
 		sessionManager.setSessionListeners(c);
-		
+
 		return sessionManager;
 	}
-	
-//	@Bean
-//	public QuartzSessionValidationScheduler2 quartzSessionValidationScheduler2(DefaultWebSessionManager sessionManager){
-//		QuartzSessionValidationScheduler2 quartzSessionValidationScheduler2=new QuartzSessionValidationScheduler2();
-//		quartzSessionValidationScheduler2.setSessionManager(sessionManager);
-//		quartzSessionValidationScheduler2.setSessionValidationInterval(1000*5);
-//		return quartzSessionValidationScheduler2;
-//	}
+
 	 @Bean
 	 public SessionDao sessionDao(RedisUtil redisUtil,ShiroRedisCacheManager shiroRedisCacheManager) {
-	 SessionDao sessionDao = new SessionDao();
-	 //设置缓存器的名称
-	 sessionDao.setActiveSessionsCacheName("shiro-activeSessionCache1");
-	 //注入缓存管理器默认的是ehcache缓存
-	 sessionDao.setCacheManager(shiroRedisCacheManager);
-	 //注入缓存管理器2(实现session由redis控制有多种方法，上一步是一种，下面这样写也行)
-	 sessionDao.setRedisUtil(redisUtil);
-	 return sessionDao;
-	 }
-	
-	 @Bean
-	 public RedisUtil redisUtil(RedisTemplate<String,Object> redisTemplate) {
-	 RedisUtil redisUtil = new RedisUtil();
-	 redisUtil.setRedisTemplate(redisTemplate);
-	 return redisUtil;
+		 SessionDao sessionDao = new SessionDao();
+		 //设置缓存器的名称
+		 sessionDao.setActiveSessionsCacheName("shiro-activeSessionCache1");
+		 //注入缓存管理器默认的是ehcache缓存
+		 sessionDao.setCacheManager(shiroRedisCacheManager);
+		 //注入缓存管理器2(实现session由redis控制有多种方法，上一步是一种，下面这样写也行)
+		 sessionDao.setRedisUtil(redisUtil);
+		 return sessionDao;
 	 }
 
-	
+	 @Bean
+	 public RedisUtil redisUtil(RedisTemplate<String,Object> redisTemplate) {
+		 RedisUtil redisUtil = new RedisUtil();
+		 redisUtil.setRedisTemplate(redisTemplate);
+		 return redisUtil;
+	 }
+
+
 
 	@Bean(name = "filterRegistrationBean1")
 	public FilterRegistrationBean filterRegistrationBean() {
@@ -208,20 +199,21 @@ public class ShiroConfig {
 				.addInitParameter("targetFilterLifecycle", "true");
 		filterRegistrationBean.setEnabled(true);
 		filterRegistrationBean.addUrlPatterns("/");
-//		filterRegistrationBean.setDispatcherTypes(DispatcherType.REQUEST,
-//				DispatcherType.FORWARD, DispatcherType.INCLUDE,
-//				DispatcherType.ERROR);
 		return filterRegistrationBean;
 	}
 
+	/**
+	 * 过滤器
+	 * 限定哪些资源或访问需要权限验证
+	 */
 	@Bean(name = "shiroFilter")
 	public ShiroFilterFactoryBean shiroFilterFactoryBean(
 			@Qualifier("defaultWebSecurityManager") DefaultWebSecurityManager defaultWebSecurityManager) {
 		// SecurityUtils.setSecurityManager(defaultWebSecurityManager);
 		ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
 		shiroFilterFactoryBean.setLoginUrl("/login");
-		shiroFilterFactoryBean.setSuccessUrl("/index");
-		shiroFilterFactoryBean.setUnauthorizedUrl("/login");
+//		shiroFilterFactoryBean.setSuccessUrl("/index");
+//		shiroFilterFactoryBean.setUnauthorizedUrl("/login");
 		shiroFilterFactoryBean.setSecurityManager(defaultWebSecurityManager);
 		Map<String, Filter> filterMap1 = shiroFilterFactoryBean.getFilters();
 		filterMap1.put("authc", new MyFormAuthenticationFilter());
@@ -230,9 +222,11 @@ public class ShiroConfig {
 		filterMap.put("/static/**", "anon");
 		filterMap.put("/js/**", "anon");
 		filterMap.put("/css/**", "anon");
+		// api 为内部通信，直接放行
 		filterMap.put("/api/**", "anon");
-		filterMap.put("/logout", "anon");
 		filterMap.put("/login", "authc");
+		// 业务背景下这些接口也直接放行
+		filterMap.put("/logout", "anon");
 		filterMap.put("/register**", "anon");
 		filterMap.put("/register/**", "anon");
 		filterMap.put("/retrieve_password", "anon");
@@ -243,7 +237,7 @@ public class ShiroConfig {
 
 	}
 
-	
+
 
 
 }

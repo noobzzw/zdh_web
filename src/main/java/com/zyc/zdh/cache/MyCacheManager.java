@@ -5,10 +5,6 @@ import org.springframework.cache.CacheManager;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * @author zyc-admin
- * @data 2018-03-20 10:12
- **/
 public class MyCacheManager implements CacheManager{
 
 	private List<String> cacheNames;
@@ -40,11 +36,11 @@ public class MyCacheManager implements CacheManager{
 	@Override
 	public Cache getCache(String name) {
 		//多级缓存实现
-		if(name.equals(myCacheTemplate.getName())){
+		if (name.equals(myCacheTemplate.getName())) {
 			return myCacheTemplate;
 		}
 		//redis缓存实现
-		if(name.equals(myRedisCache.getName())){
+		if (name.equals(myRedisCache.getName())) {
 			return myRedisCache;
 		}
 		return myRedisCache;

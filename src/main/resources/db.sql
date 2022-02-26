@@ -312,7 +312,7 @@ create table meta_table_info(
  create_time TIMESTAMP
 );
 
---2020-06-08 更新;
+-- 2020-06-08 更新;
 alter table quartz_job_info add column job_ids varchar(500);
 
 alter table etl_task_info add column file_type_input varchar(10);
@@ -327,7 +327,7 @@ alter table etl_more_task_info add column file_type_output varchar(10);
 alter table etl_more_task_info add column encoding_output varchar(10);
 alter table etl_more_task_info add column sep_output varchar(10);
 
---2020-06-30 更新;
+-- 2020-06-30 更新;
 alter table etl_task_info add column header_input varchar(10);
 alter table etl_task_info add column header_output varchar(10);
 
@@ -338,7 +338,7 @@ alter table sql_task_info add column encoding_output varchar(10);
 alter table sql_task_info add column sep_output varchar(10);
 alter table sql_task_info add column header_output varchar(10);
 
---2020-06-31 更新
+-- 2020-06-31 更新
 alter table zdh_ha_info add column web_port varchar(100) after zdh_port;
 
 

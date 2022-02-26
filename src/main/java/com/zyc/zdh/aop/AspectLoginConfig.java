@@ -1,5 +1,6 @@
 package com.zyc.zdh.aop;
 
+import com.zyc.zdh.shiro.RedisOtherDb;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
@@ -9,13 +10,12 @@ import org.springframework.core.Ordered;
 import org.springframework.stereotype.Service;
 import com.zyc.zdh.entity.ResultInfo;
 import com.zyc.zdh.entity.User;
-import com.zyc.zdh.shiro.RedisOtherDb;
 
 /**
- * ClassName: AspectLoginConfig   
+ * ClassName: AspectLoginConfig
  * @author zyc-admin
- * @date 2018年2月5日  
- * @Description: TODO  
+ * @date 2018年2月5日
+ * @Description: TODO
  */
 @Aspect
 @Service
@@ -23,15 +23,15 @@ public class AspectLoginConfig implements Ordered {
 
 	@Autowired
 	private RedisOtherDb redisOtherDb;
-	
-	@Pointcut("execution(* com.zyc.zdh.cloud.api.LoginService.*(..))")
+
+	@Pointcut("execution(* com.zyc.zdh.api.LoginService.*(..))")
 	public void pointLogin(){}
-	
+
 	public Object around(ProceedingJoinPoint join) throws Throwable{
 		MethodSignature signature = (MethodSignature)join.getSignature();
 		String methodName=signature.getMethod().getName();
 		Object[] args=join.getArgs();
-		
+
 		if(checkMethod(methodName)){
 			return join.proceed();
 		}else if(isLogined(args)){
@@ -39,7 +39,7 @@ public class AspectLoginConfig implements Ordered {
 		}
 		return returnExceptionValue(signature.getReturnType(),"未登录");
 	}
-	
+
 	@Override
 	public int getOrder() {
 		// TODO Auto-generated method stub
@@ -55,21 +55,21 @@ public class AspectLoginConfig implements Ordered {
 		}
 		return false;
 	}
-	
+
 	private boolean isLogined(Object[] args){
 		if(args.length==1&&args[0]!=null){
-			String userName=((User)args[0]).getUserName();
+			String userName=((User)args[0]).getUsername();
 			if(redisOtherDb.exists(userName)){
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	protected Object returnExceptionValue(Class<?> clazz, String message) throws Exception{
 		Object object = clazz.newInstance();
 		if(object instanceof ResultInfo){
-			((ResultInfo) object).setStatus("101");
+			((ResultInfo) object).setCode(ResultInfo.Code.Success.getValue());
 			((ResultInfo) object).setMessage(message);
 		}
 		return (ResultInfo)object;

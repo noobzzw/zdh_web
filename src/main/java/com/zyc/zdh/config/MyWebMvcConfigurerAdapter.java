@@ -28,43 +28,26 @@ public class MyWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter {
 
 	@Autowired
 	Environment ev;
-//	@Bean
-//	public Converter<String, Timestamp> stringToTimeStampConvert() {
-//		return new Converter<String, Timestamp>() {
-//			@Override
-//			public Timestamp convert(String source) {
-//				Timestamp date = null;
-//				try {
-//					date = Timestamp.valueOf(source);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//				return date;
-//			}
-//		};
-//	}
 
 	@Override
 	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
 		configurer.enable();
 	}
 
+	// 前后端分离后无需后端控制跳转404
+	@Deprecated
 	@Bean
 	public EmbeddedServletContainerCustomizer containerCustomizer() {
-
-		return new EmbeddedServletContainerCustomizer() {
-			@Override
-			public void customize(ConfigurableEmbeddedServletContainer container) {
-				ErrorPage error404Page = new ErrorPage(HttpStatus.NOT_FOUND, "/404");
-				container.addErrorPages(error404Page);
-			}
+		// 控制404跳转页面
+		return container -> {
+			ErrorPage error404Page = new ErrorPage(HttpStatus.NOT_FOUND, "/404");
+			container.addErrorPages(error404Page);
 		};
 	}
 
 	@Bean
 	public InternalResourceViewResolver viewResolver() {
 		InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-		// viewResolver.setPrefix("/WEB-INF/classes/views/");
         System.out.println("打印web.path:"+ev.getProperty("web.path"));
 		viewResolver.setPrefix(ev.getProperty("web.path"));
 		viewResolver.setSuffix(".html");

@@ -127,12 +127,12 @@
         HTTP:
            sep:分割符，可为空
            fileType:可选csv,json 默认json
-        
+
         REDIS:
             data_type:写入数据类型，可选，string,hash,list,set,table
             key.column:当选择写入数据类型为table 时配置此选项可以生成特定规则key
         CASSANDRA:
-        
+
         KUDU:
             primary_key:创建表的主键字段,如果不输入此参数会创建一个默认字段zdh_auto_md5 作为主键
             replicas:副本个数
@@ -235,11 +235,11 @@
     <script type="text/javascript">
         var testBsSuggest = $("#test").bsSuggest({
             url: "js/plugins/suggest/data.json",
-            /*effectiveFields: ["userName", "shortAccount"],
+            /*effectiveFields: ["username", "shortAccount"],
             searchFields: [ "shortAccount"],
-            effectiveFieldsAlias:{userName: "姓名"},*/
+            effectiveFieldsAlias:{username: "姓名"},*/
             idField: "userId",
-            keyField: "userName"
+            keyField: "username"
         }).on('onDataRequestSuccess', function (e, result) {
             console.log('onDataRequestSuccess: ', result);
         }).on('onSetSelectValue', function (e, keyword) {
@@ -253,12 +253,12 @@
         var testBsSuggest = $("#testNoBtn").bsSuggest({
             //url: "/rest/sys/getuserlist?keyword=",
             url: "js/plugins/suggest/data.json",
-            /*effectiveFields: ["userName", "shortAccount"],
+            /*effectiveFields: ["username", "shortAccount"],
             searchFields: [ "shortAccount"],
-            effectiveFieldsAlias:{userName: "姓名"},*/
+            effectiveFieldsAlias:{username: "姓名"},*/
             showBtn: false,
             idField: "userId",
-            keyField: "userName"
+            keyField: "username"
         }).on('onDataRequestSuccess', function (e, result) {
             console.log('onDataRequestSuccess: ', result);
         }).on('onSetSelectValue', function (e, keyword) {

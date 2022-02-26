@@ -299,11 +299,11 @@
     <script type="text/javascript">
         var testBsSuggest = $("#test").bsSuggest({
             url: "js/plugins/suggest/data.json",
-            /*effectiveFields: ["userName", "shortAccount"],
+            /*effectiveFields: ["username", "shortAccount"],
             searchFields: [ "shortAccount"],
-            effectiveFieldsAlias:{userName: "姓名"},*/
+            effectiveFieldsAlias:{username: "姓名"},*/
             idField: "userId",
-            keyField: "userName"
+            keyField: "username"
         }).on('onDataRequestSuccess', function (e, result) {
             console.log('onDataRequestSuccess: ', result);
         }).on('onSetSelectValue', function (e, keyword) {
@@ -317,12 +317,12 @@
         var testBsSuggest = $("#testNoBtn").bsSuggest({
             //url: "/rest/sys/getuserlist?keyword=",
             url: "js/plugins/suggest/data.json",
-            /*effectiveFields: ["userName", "shortAccount"],
+            /*effectiveFields: ["username", "shortAccount"],
             searchFields: [ "shortAccount"],
-            effectiveFieldsAlias:{userName: "姓名"},*/
+            effectiveFieldsAlias:{username: "姓名"},*/
             showBtn: false,
             idField: "userId",
-            keyField: "userName"
+            keyField: "username"
         }).on('onDataRequestSuccess', function (e, result) {
             console.log('onDataRequestSuccess: ', result);
         }).on('onSetSelectValue', function (e, keyword) {

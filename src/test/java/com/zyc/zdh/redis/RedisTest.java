@@ -11,6 +11,8 @@ import java.util.Set;
 import com.zyc.zdh.ProfilesResolver;
 import com.zyc.zdh.ZdhApplication;
 import com.zyc.zdh.entity.Role;
+import com.zyc.zdh.shiro.RedisOtherDb;
+import com.zyc.zdh.shiro.RedisUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +22,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 
 import com.zyc.zdh.service.RoleService;
-import com.zyc.zdh.shiro.RedisOtherDb;
-import com.zyc.zdh.shiro.RedisUtil;
 
 
 @RunWith(SpringRunner.class)

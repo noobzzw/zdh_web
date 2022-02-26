@@ -331,6 +331,12 @@
             </exclusions>
         </dependency>
 
+<!--        监控mapping-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
     </dependencies>
 
     <repositories>

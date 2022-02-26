@@ -26,6 +26,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.beans.PropertyEditorSupport;
@@ -57,7 +58,7 @@ public class ZdhController {
     DispatchTaskService dispatchTaskService;
     @Autowired
     ZdhLogsService zdhLogsService;
-    @Autowired
+    @Resource
     QuartzJobMapper quartzJobMapper;
     @Autowired
     QuartzManager2 quartzManager2;

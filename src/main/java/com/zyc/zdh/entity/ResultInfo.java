@@ -1,48 +1,43 @@
 package com.zyc.zdh.entity;
 
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 
 /**
- * ClassName: ResultInfo   
- * @author zyc-admin
- * @date 2018年2月5日  
- * @Description: TODO  
+ * @author zzw
  */
+@Data
 public class ResultInfo implements Serializable {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3807874205300200606L;
-	
-	private Object result;
-	
-	private String status;
-	
+	// 返回的数据
+	private Object data;
+	/* 状态码
+		20000: success;
+		50008: Illegal token;
+		50012: Other clients logged in;
+		50014: Token expired;
+
+	 */
+	private int code;
+	// response消息
 	private String message;
+	// 用于身份识别的token
+	private String token;
 
-	public Object getResult() {
-		return result;
+	public enum Code {
+		Success(20000),
+		IllegalToken(50008),
+		OtherClientsLoggedIn(50012),
+		TokenExpired(50014);
+		private final int value;
+		Code(int value) {
+			this.value = value;
+		}
+		public int getValue() {
+			return this.value;
+		}
 	}
-
-	public void setResult(Object result) {
-		this.result = result;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
-	
 }

@@ -29,7 +29,7 @@ import org.springframework.data.redis.serializer.RedisSerializer;
  * @date:2017年6月30日 上午9:26:55
  * @description:
  * @version :
- * 
+ *
  */
 
 public class RedisUtil {
@@ -44,7 +44,7 @@ public class RedisUtil {
 
 	/**
 	 * 根据key获取数据类型
-	 * 
+	 *
 	 * @param key
 	 * @return
 	 */
@@ -55,7 +55,7 @@ public class RedisUtil {
 
 	/**
 	 * 根据key 和缓存库索引 获取数据类型
-	 * 
+	 *
 	 * @param key
 	 * @param dbIndex
 	 * @return
@@ -75,7 +75,7 @@ public class RedisUtil {
 
 	/**
 	 * 批量删除对应的value
-	 * 
+	 *
 	 * @param keys
 	 */
 	public void remove(final String... keys) {
@@ -86,7 +86,7 @@ public class RedisUtil {
 
 	/**
 	 * 批量删除key
-	 * 
+	 *
 	 * @param pattern
 	 */
 	public void removePattern(final String pattern) {
@@ -97,7 +97,7 @@ public class RedisUtil {
 
 	/**
 	 * 删除对应的value
-	 * 
+	 *
 	 * @param key
 	 */
 	public void remove(final String key) {
@@ -108,7 +108,7 @@ public class RedisUtil {
 
 	/**
 	 * 删除指定索引数据库中的指定键对应的value
-	 * 
+	 *
 	 * @param key
 	 *            键
 	 * @param dbIndex
@@ -133,7 +133,7 @@ public class RedisUtil {
 
 	/**
 	 * 判断缓存中是否有对应的value
-	 * 
+	 *
 	 * @param key
 	 * @return
 	 */
@@ -143,7 +143,7 @@ public class RedisUtil {
 
 	/**
 	 * 获取所有的key 查询默认的缓存数据库db0
-	 * 
+	 *
 	 * @return
 	 */
 	public Set<String> keys() {
@@ -152,7 +152,7 @@ public class RedisUtil {
 
 	/**
 	 * 根据缓存数据库索引,获取所有的key
-	 * 
+	 *
 	 * @param dbIndex
 	 * @return
 	 */
@@ -176,20 +176,15 @@ public class RedisUtil {
 
 	/**
 	 * 读取缓存
-	 * 
+	 *
 	 * @param key
 	 * @return
 	 */
 	public Object get(final String key) {
-		Object result = null;
+		Object result;
 		String type = type(key);
 		switch (type) {
-		case "string":
-			ValueOperations<String, Object> operations = redisTemplate
-					.opsForValue();
-			result = operations.get(key);
-			break;
-		case "list":
+			case "list":
 			ListOperations<String, Object> opsForList = redisTemplate
 					.opsForList();
 			long end = opsForList.size(key);
@@ -217,7 +212,7 @@ public class RedisUtil {
 	/**
 	 * 根据key获取集合类型 因myRedis~keys
 	 * 的集合是redis自己插入的没有使用序列化，所以不能直接使用redisTemplate.opsForZSet()
-	 * 
+	 *
 	 * @param key
 	 * @return
 	 */
@@ -242,7 +237,7 @@ public class RedisUtil {
 
 	/**
 	 * 指定数据库读取缓存
-	 * 
+	 *
 	 * @param key
 	 *            键
 	 * @param dbIndex
@@ -269,7 +264,7 @@ public class RedisUtil {
 
 	/**
 	 * 写入缓存
-	 * 
+	 *
 	 * @param key
 	 *            键
 	 * @param value
@@ -314,7 +309,7 @@ public class RedisUtil {
 
 	/**
 	 * 写入缓存
-	 * 
+	 *
 	 * @param key
 	 *            键
 	 * @param value
@@ -342,7 +337,7 @@ public class RedisUtil {
 
 	/**
 	 * 写入缓存
-	 * 
+	 *
 	 * @param key
 	 *            键
 	 * @param value
@@ -386,7 +381,7 @@ public class RedisUtil {
 
 	/**
 	 * 写入缓存
-	 * 
+	 *
 	 * @param key
 	 *            键
 	 * @param value
@@ -420,7 +415,7 @@ public class RedisUtil {
 
 	/**
 	 * 写入缓存
-	 * 
+	 *
 	 * @param key
 	 *            键
 	 * @param value
@@ -470,7 +465,7 @@ public class RedisUtil {
 
 	/**
 	 * 写入缓存
-	 * 
+	 *
 	 * @param key
 	 *            键
 	 * @param value

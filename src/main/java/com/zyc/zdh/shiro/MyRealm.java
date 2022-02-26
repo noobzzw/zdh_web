@@ -62,7 +62,7 @@ public class MyRealm extends AuthorizingRealm {
 		User user = new User();// 根据用户名密码获取user
 		//Object obj = new SimpleHash("md5", new String(password), null, 1);
 		user.setPassword(new String(password));
-		user.setUserName(userName);
+		user.setUsername(userName);
 		user = ((AccountService) SpringContext.getBean("accountService"))
 				.findByPw(user);
 		if (user == null) {

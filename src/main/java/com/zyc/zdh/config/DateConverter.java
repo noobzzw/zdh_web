@@ -6,6 +6,9 @@ import org.springframework.core.convert.converter.Converter;
 
 import java.sql.Timestamp;
 
+/**
+ * 日期转换类
+ */
 public class DateConverter implements Converter<String, Timestamp> {
 
     private Logger logger = LoggerFactory.getLogger(DateConverter.class);
@@ -16,17 +19,13 @@ public class DateConverter implements Converter<String, Timestamp> {
 
     @Override
     public Timestamp convert(String value) {
-        logger.info("转换日期：" + value);
-
+        logger.info("转换日期：{}",value);
         if (value == null || value.trim().equals("") || value.equalsIgnoreCase("null")) {
             return null;
         }
-
         value = value.trim();
-
         try {
             return Timestamp.valueOf(value);
-
         } catch (Exception e) {
             throw new RuntimeException(String.format("parser %s to Date fail", value));
         }

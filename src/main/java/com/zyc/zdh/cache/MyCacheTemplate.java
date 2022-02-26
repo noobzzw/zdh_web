@@ -12,10 +12,6 @@ import org.springframework.data.redis.cache.RedisCacheManager;
 
 import java.util.concurrent.Callable;
 
-/**
- * @author zyc-admin
- * @data 2018-03-19 17:15
- **/
 public class MyCacheTemplate implements Cache {
 
 	private static final Logger logger = LoggerFactory.getLogger(MyCacheTemplate.class);

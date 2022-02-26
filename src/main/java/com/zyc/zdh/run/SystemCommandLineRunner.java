@@ -3,12 +3,9 @@ package com.zyc.zdh.run;
 import com.zyc.zdh.dao.QuartzJobMapper;
 import com.zyc.zdh.entity.QuartzJobInfo;
 import com.zyc.zdh.job.EmailJob;
-import com.zyc.zdh.job.JobCommon;
 import com.zyc.zdh.job.JobModel;
 import com.zyc.zdh.job.SnowflakeIdWorker;
 import com.zyc.zdh.quartz.QuartzManager2;
-import com.zyc.zdh.service.ZdhLogsService;
-import com.zyc.zdh.util.SpringContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +13,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 
@@ -27,7 +25,7 @@ public class SystemCommandLineRunner implements CommandLineRunner {
     @Autowired
     QuartzManager2 quartzManager2;
 
-    @Autowired
+    @Resource
     QuartzJobMapper quartzJobMapper;
 
     @Autowired
@@ -37,7 +35,7 @@ public class SystemCommandLineRunner implements CommandLineRunner {
     public void run(String... strings) throws Exception {
         runSnowflakeIdWorker();
         logger.info("初始化通知事件");
-        EmailJob.notice_event();
+        EmailJob.noticeEvent();
         logger.info("初始化失败任务监控程序");
         //检测是否有email 任务 如果没有则添加
         QuartzJobInfo qj = new QuartzJobInfo();
@@ -60,12 +58,7 @@ public class SystemCommandLineRunner implements CommandLineRunner {
         logger.info("初始化分布式id生成器");
         //获取服务id
         String myid = ev.getProperty("myid", "0");
+        // init service
         SnowflakeIdWorker.init(Integer.parseInt(myid), 0);
-    }
-
-    public void runLogMQ(){
-        logger.info("初始化日志");
-        ZdhLogsService zdhLogsService = (ZdhLogsService) SpringContext.getBean("zdhLogsServiceImpl");
-        JobCommon.logThread(zdhLogsService);
     }
 }

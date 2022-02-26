@@ -10,10 +10,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.concurrent.Callable;
 
-/**
- * @author zyc-admin
- * @data 2018-03-22 15:13
- **/
 public class MyRedisCache implements Cache {
 
 	private static final Logger logger= LoggerFactory.getLogger(MyRedisCache.class);
@@ -58,10 +54,9 @@ public class MyRedisCache implements Cache {
 	public ValueWrapper get(Object key) {
 		Cache myRedis = redisCacheManager.getCache(getName());
 		if(myRedis!=null){
-			logger.info("取数据myReids库===key:{}",key);
-			if(myRedis.get(key)!=null){
-				RedisCacheElement vr=new RedisCacheElement(new RedisCacheKey(key),myRedis.get(key).get());
-				return vr;
+			logger.info("取数据My Redis库, key:{}",key);
+			if (myRedis.get(key)!=null) {
+				return new RedisCacheElement(new RedisCacheKey(key),myRedis.get(key).get());
 			}
 		}
 		return null;

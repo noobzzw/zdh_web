@@ -34,7 +34,7 @@
                             <span><img alt="image" class="img-circle" src="img/zdh.png" /></span>
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                 <span class="clear">
-                                    <span class="block m-t-xs"><strong id="userName" class="font-bold">Beaut-zihan</strong></span>
+                                    <span class="block m-t-xs"><strong id="username" class="font-bold">Beaut-zihan</strong></span>
                                 <span class="text-muted text-xs block">超级管理员<b class="caret"></b></span>
                                 </span>
                             </a>
@@ -432,8 +432,8 @@
                 data: '',
                 //成功返回
                 success: function (data) {
-                    if(data.userName !='' ){
-                     $('#userName').text(data.userName)
+                    if(data.username !='' ){
+                     $('#username').text(data.username)
                     }else{
                         window.location.href="login"
                     }

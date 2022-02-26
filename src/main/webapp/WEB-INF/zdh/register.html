@@ -33,7 +33,7 @@
             <p>创建一个ZD新账户</p>
             <form id="register_form" class="m-t" role="form" action="register_zdh" method="post">
                 <div class="form-group">
-                    <input id="userName" name="userName" type="text" class="form-control" placeholder="请输入用户名" required="">
+                    <input id="username" name="username" type="text" class="form-control" placeholder="请输入用户名" required="">
                 </div>
                 <div class="form-group">
                     <input id="email" name="email" type="email" class="form-control" placeholder="请输入邮箱" required="">
@@ -78,7 +78,7 @@
         });
 
         function register(){
-            if( $('#userName').val().trim()==''){
+            if( $('#username').val().trim()==''){
                 layer.msg("用户名不能为空")
                 return ;
             }

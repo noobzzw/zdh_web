@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,11 +22,11 @@ import java.util.Set;
 @Service("quartzManager2")
 public class QuartzManager2 {
 
-	private static Logger logger = LoggerFactory.getLogger(QuartzManager2.class);
+	private static final Logger logger = LoggerFactory.getLogger(QuartzManager2.class);
 	@Autowired
 	private SchedulerFactoryBean schedulerFactoryBean;
-	
-	@Autowired
+
+	@Resource
 	private QuartzJobMapper quartzJobMapper;
 
 	/**
@@ -67,10 +68,10 @@ public class QuartzManager2 {
 	public void addQuartzJobInfo(QuartzJobInfo quartzJobInfo){
 		quartzJobMapper.insert(quartzJobInfo);
 	}
-	
+
 	/**
 	 * 执行定时任务
-	 * 
+	 *
 	 * @param quartzJobInfo
 	 */
 	public void addTaskToQuartz(QuartzJobInfo quartzJobInfo) {
@@ -191,10 +192,10 @@ public class QuartzManager2 {
 		deleteTask(quartzJobInfo,"finish");
 		addTaskToQuartz(quartzJobInfo);
 	}
-	
+
 	/**
 	 * 删除任务
-	 * 
+	 *
 	 * @param quartzJobInfo
 	 * @return
 	 */
@@ -217,7 +218,7 @@ public class QuartzManager2 {
 
 	/**
 	 * 暂停定时任务
-	 * 
+	 *
 	 * @param quartzJobInfo
 	 */
 	public void pauseTask(QuartzJobInfo quartzJobInfo) {
@@ -236,7 +237,7 @@ public class QuartzManager2 {
 
 	/**
 	 * 恢复定时任务
-	 * 
+	 *
 	 * @param quartzJobInfo
 	 */
 	public void resumeTask(QuartzJobInfo quartzJobInfo) {
@@ -279,7 +280,7 @@ public class QuartzManager2 {
 
 	/**
 	 * 获取SimpleScheduleBuilder
-	 * 
+	 *
 	 * @param expression
 	 * @return
 	 */

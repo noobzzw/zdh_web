@@ -10,7 +10,6 @@ import com.zyc.zdh.shiro.RedisUtil;
 import com.zyc.zdh.util.SpringContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.*;
 
@@ -23,7 +22,7 @@ public class EmailJob {
 
     public static void run(QuartzJobInfo quartzJobInfo) {
         try{
-            logger.info("开始检测失败任务...");
+            logger.debug("开始检测失败任务...");
             TaskLogsMapper taskLogsMapper = (TaskLogsMapper) SpringContext.getBean("taskLogsMapper");
             ZdhLogsService zdhLogsService= (ZdhLogsService) SpringContext.getBean("zdhLogsServiceImpl");
             JemailService jemailService= (JemailService) SpringContext.getBean("jemailServiceImpl");
@@ -75,21 +74,18 @@ public class EmailJob {
     }
 
 
-    public static void notice_event(){
-
-        logger.info("开始加载待下载的文件信息");
+    public static void noticeEvent(){
+        logger.debug("开始加载待下载的文件信息");
         ZdhDownloadMapper zdhDownloadMapper = (ZdhDownloadMapper) SpringContext.getBean("zdhDownloadMapper");
         RedisUtil redisUtil = (RedisUtil) SpringContext.getBean("redisUtil");
-
-        List<ZdhDownloadInfo> zdhDownloadInfos=zdhDownloadMapper.selectNotice();
-
-        Iterator<ZdhDownloadInfo> iterator=zdhDownloadInfos.iterator();
-        Map<String,List<ZdhDownloadInfo>> map=new HashMap<>();
+        List<ZdhDownloadInfo> zdhDownloadInfos = zdhDownloadMapper.selectNotice();
+        Iterator<ZdhDownloadInfo> iterator = zdhDownloadInfos.iterator();
+        Map<String,List<ZdhDownloadInfo>> map = new HashMap<>();
         while (iterator.hasNext()){
             ZdhDownloadInfo zdhDownloadInfo=iterator.next();
-            if(map.containsKey(zdhDownloadInfo.getOwner())){
+            if (map.containsKey(zdhDownloadInfo.getOwner())) {
                 map.get(zdhDownloadInfo.getOwner()).add(zdhDownloadInfo);
-            }else{
+            } else {
                 List<ZdhDownloadInfo> zdhDownloadInfos2=new ArrayList<>();
                 zdhDownloadInfos2.add(zdhDownloadInfo);
                 map.put(zdhDownloadInfo.getOwner(),zdhDownloadInfos2);
@@ -100,7 +96,6 @@ public class EmailJob {
             String key=a.getKey();
             redisUtil.set("zdhdownloadinfos_"+key,JSON.toJSONString(a.getValue()));
         }
-        logger.info("完成加载待下载的文件信息");
-
+        logger.debug("完成加载待下载的文件信息");
     }
 }

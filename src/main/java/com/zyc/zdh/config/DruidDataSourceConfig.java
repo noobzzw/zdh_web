@@ -84,6 +84,13 @@ public class DruidDataSourceConfig {
 	@Primary
 	public DataSource dataSource() {
 		// @Primary 注解作用是当程序选择dataSource时选择被注解的这个
+		return getAndSetDruidDataSource(dbUrl, username, password, driverClassName);
+	}
+
+	/**
+	 * 设置druid数据源基本配置
+	 */
+	private DataSource getAndSetDruidDataSource(String dbUrl, String username, String password, String driverClassName) {
 		DruidDataSource datasource = new DruidDataSource();
 		datasource.setUrl(dbUrl);
 		datasource.setUsername(username);
@@ -113,29 +120,7 @@ public class DruidDataSourceConfig {
 	@Bean(name = "dataSource2")
 	public DataSource dataSource2() {
 		// @Primary 注解作用是当程序选择dataSource时选择被注解的这个
-		DruidDataSource datasource = new DruidDataSource();
-		datasource.setUrl(dbUrl2);
-		datasource.setUsername(username2);
-		datasource.setPassword(password2);
-		datasource.setDriverClassName(driverClassName2);
-		datasource.setInitialSize(initialSize);
-		datasource.setMinIdle(minIdle);
-		datasource.setMaxActive(maxActive);
-		datasource.setMaxWait(maxWait);
-		datasource.setTimeBetweenEvictionRunsMillis(timeBetweenEvictionRunsMillis);
-		datasource.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
-		datasource.setValidationQuery(validationQuery);
-		datasource.setTestWhileIdle(testWhileIdle);
-		datasource.setTestOnBorrow(testOnBorrow);
-		datasource.setTestOnReturn(testOnReturn);
-		datasource.setPoolPreparedStatements(poolPreparedStatements);
-		try {
-			datasource.setFilters(filters);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return datasource;
+		return getAndSetDruidDataSource(dbUrl2, username2, password2, driverClassName2);
 	}
 
 	@Bean

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSONObject;
+import com.zyc.zdh.api.LoginService;
 import com.zyc.zdh.entity.User;
 import com.zyc.zdh.service.AccountService;
 import com.zyc.zdh.service.JemailService;
@@ -22,14 +23,10 @@ import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import com.zyc.zdh.service.RoleService;
 
-@Controller
 public class LoginController {
 
     private static Logger logger = LoggerFactory
@@ -42,6 +39,8 @@ public class LoginController {
     MyRealm myRealm;
     @Autowired
     JemailService jemailService;
+    @Autowired
+    LoginService loginService;
 
     @RequestMapping("/")
     public String getLogin() {
@@ -62,22 +61,18 @@ public class LoginController {
         //user.setPassword(new SimpleHash("md5", new String(user.getPassword()), null, 1).toString());
 
         //判断是否存在用户
-        List<User> users=accountService.findByUserName(user);
-
+        List<User> users = accountService.findByUserName(user);
         if(users.size()>0){
             json.put("error", "账户已存在");
             return json.toJSONString();
         }
         int result = accountService.insert(user);
 
+        json.put("error", "");
         if (result > 0) {
-            json.put("error", "");
             json.put("success", "200");
-            return json.toJSONString();
-        } else {
-            json.put("error", "");
-            return json.toJSONString();
         }
+        return json.toJSONString();
     }
 
     @RequestMapping("login")
@@ -117,7 +112,7 @@ public class LoginController {
         }
 
         user.setId(user_old.getId());
-        if(!user_old.getUserName().equals(user.getUserName())){
+        if(!user_old.getUsername().equals(user.getUsername())){
            List<User> users= accountService.findByUserName(user);
            if(users.size()>0){
                json.put("status","已经存在相同用户名");
@@ -131,7 +126,7 @@ public class LoginController {
 
         Cache<Object,AuthenticationInfo> cache=myRealm.getAuthenticationCache();
         if (cache!=null){
-            cache.remove(user.getUserName());
+            cache.remove(user.getUsername());
         }
 
 
@@ -155,8 +150,8 @@ public class LoginController {
 
         JSONObject json = new JSONObject();
         json.put("id",user.getId());
-        json.put("userName",user.getUserName());
-        //json.put("password",user.getUserName());
+        json.put("userName",user.getUsername());
+        //json.put("password",user.getUsername());
         json.put("email",user.getEmail());
         json.put("is_use_email",user.getIs_use_email());
         json.put("phone",user.getPhone());
@@ -168,7 +163,7 @@ public class LoginController {
     @ResponseBody
     public String retrieve_password(String username){
         User user=new User();
-        user.setUserName(username);
+        user.setUsername(username);
         List<User> users=accountService.findByUserName(user);
 
         JSONObject json = new JSONObject();
@@ -191,7 +186,7 @@ public class LoginController {
         User user = (User) SecurityUtils.getSubject().getPrincipal();
         Cache<Object,AuthenticationInfo> cache=myRealm.getAuthenticationCache();
         if (cache!=null && user !=null){
-            cache.remove(user.getUserName());
+            cache.remove(user.getUsername());
         }
         subject.logout();
         System.out.println("logout");

@@ -9,10 +9,10 @@ public class SnowflakeIdWorker {
 	private static SnowflakeIdWorker SnowflakeIdWorker=null;
 	//声明私有构造函数
 	private SnowflakeIdWorker(){
-		
+
 	}
-	
-	
+
+
     // ==============================Fields===========================================
     /** 开始时间截 (2015-01-01) */
     private final long twepoch = 1420041600000L;
@@ -142,14 +142,14 @@ public class SnowflakeIdWorker {
             System.out.println(id);
         }
     }
-    
+
     public static SnowflakeIdWorker getInstance(){
     	return SnowflakeIdWorker;
     }
 
     public static void init(int workerId,int datacenterId){
-        if(SnowflakeIdWorker==null){
-            SnowflakeIdWorker=new SnowflakeIdWorker(workerId,datacenterId);
+        if (SnowflakeIdWorker==null) {
+            SnowflakeIdWorker = new SnowflakeIdWorker(workerId,datacenterId);
         }
     }
 }

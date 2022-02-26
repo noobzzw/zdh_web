@@ -18,9 +18,9 @@ import com.zyc.zdh.quartz.MyJobFactory;
 
 /**
  * quartz配置类
- * 
+ *
  * @author Administrator
- * 
+ *
  */
 @Configuration
 public class QuartzConfig {
@@ -59,20 +59,12 @@ public class QuartzConfig {
 		schedulerFactoryBean.setQuartzProperties(quartzProperties());
 		// 延迟60s启动quartz
 		schedulerFactoryBean.setStartupDelay(60);
-
 		return schedulerFactoryBean;
 	}
 
 	@Bean
 	public Scheduler scheduler(SchedulerFactoryBean schedulerFactoryBean) {
-		Scheduler scheduler = schedulerFactoryBean.getScheduler();
-//		try {
-//			//scheduler.start();
-//		} catch (SchedulerException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		return scheduler;
+		return schedulerFactoryBean.getScheduler();
 	}
 
 	public Properties quartzProperties() {
@@ -110,7 +102,6 @@ public class QuartzConfig {
 		 prop.put("org.quartz.dataSource.quartzDataSource.password", password);
 		 prop.put("org.quartz.dataSource.quartzDataSource.maxConnections",
 		 "10");
-
 		prop.put("org.quartz.jobStore.dontSetAutoCommitFalse", "false");
 
 		return prop;
